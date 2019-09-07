@@ -1,5 +1,6 @@
 """Create pull request on Github."""
 
+import logging
 import os
 import sys
 
@@ -7,7 +8,7 @@ from pygit2 import GitError, Repository
 
 from .config import load_config
 from .jira_api import JiraApi
-from .pull_request import PullRequest
+from .github_api import GitHubApi
 
 
 def get_branch(repo_local_path=None):
@@ -31,9 +32,18 @@ def read_file(path):
     return data
 
 
+def setup_logger():
+    """Set a logger up with script name logging to STDERR."""
+    logger = logging.getLogger(os.path.basename(sys.argv[0]))
+    logger.addHandler(logging.StreamHandler(stream=sys.stderr))
+    logger.setLevel(logging.INFO)
+    return logger
+
+
 def main():
     """Create pull request on Github."""
     config = load_config()
+    logger = setup_logger()
 
     # Get git branch from config or look for the locally used one in repo-path.
     # If it doesn't exist, ask user to enter the branch via the command line.
@@ -41,7 +51,7 @@ def main():
     if branch is None:
         branch = input("Please insert git branch name:\n").strip()
         if branch == "":
-            print("Invalid branch.")
+            logger.error("Invalid branch.")
             sys.exit(1)
 
     # Get pull request title from config or create one from the Jira ticket.
@@ -49,22 +59,24 @@ def main():
     if title is None:
         jira_api = JiraApi(
             jira_email=config.get("jira-email"),
-            jira_api_key=config.get("jira-api-token"))
+            jira_api_key=config.get("jira-api-token"),
+            logger=logger)
         title = jira_api.get_pr_title_from_jira_ticket(branch=branch)
 
     # Read pull request description from file (path is set in config).
     description = read_file(path=config.get("pr-desc"))
 
     # Create pull request.
-    pull_request = PullRequest(
-        repository_name=config.get("repo"),
+    gihub_api = GitHubApi(
+        github_token=config.get("github-token"), logger=logger)
+    repository = gihub_api.get_repository(repository_name=config.get("repo"))
+    gihub_api.create_pull_request(
+        repository=repository,
         title=title,
         description=description,
         base=config.get("pr-base", "master"),
         branch=branch,
         team_reviewers=config.get("pr-team"))
-
-    pull_request.create(github_token=config.get("github-token"))
 
 
 if __name__ == "__main__":
