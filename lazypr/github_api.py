@@ -1,4 +1,4 @@
-"""Module for PullRequest."""
+"""Module to access Github API."""
 
 import logging
 
@@ -29,13 +29,15 @@ class GitHubApi:
 
         In case pull request already exists, update title and description.
         """
+        assert isinstance(repository, Repository.Repository)
+
         try:
             pull_request = repository.create_pull(
                 title=title, body=description, base=base, head=branch)
             self.set_team_reviewers(pull_request, team_reviewers)
             msg = "Pull request created at {url}".format(
                 url=pull_request.html_url)
-            self.logger.info(msg)
+            self.logger.debug(msg)
         except GithubException:
             pull_request = self.update_pull_request(
                 repository=repository, branch=branch, title=title,
@@ -43,7 +45,7 @@ class GitHubApi:
             if pull_request:
                 msg = "Pull request updated at {url}".format(
                     url=pull_request.html_url)
-                self.logger.info(msg)
+                self.logger.debug(msg)
         return pull_request
 
     def update_pull_request(self, repository, branch, title, description):
