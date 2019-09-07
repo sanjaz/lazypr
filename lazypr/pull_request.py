@@ -8,6 +8,7 @@ class PullRequest:
 
     def __init__(self, repository_name, title, description, base, branch,
                  team_reviewers=None):
+        assert title
         self.repository_name = repository_name
         self.title = title
         self.description = description

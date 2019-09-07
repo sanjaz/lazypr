@@ -6,7 +6,7 @@ import sys
 from pygit2 import GitError, Repository
 
 from .config import load_config
-from .jira_api import get_pr_title_from_jira_ticket
+from .jira_api import JiraApi
 from .pull_request import PullRequest
 
 
@@ -47,10 +47,10 @@ def main():
     # Get pull request title from config or create one from the Jira ticket.
     title = config.get("pr-title")
     if title is None:
-        title = get_pr_title_from_jira_ticket(
-            branch=branch,
+        jira_api = JiraApi(
             jira_email=config.get("jira-email"),
             jira_api_key=config.get("jira-api-token"))
+        title = jira_api.get_pr_title_from_jira_ticket(branch=branch)
 
     # Read pull request description from file (path is set in config).
     description = read_file(path=config.get("pr-desc"))
