@@ -1,3 +1,5 @@
+"""Create pull request on Github."""
+
 import os
 import sys
 

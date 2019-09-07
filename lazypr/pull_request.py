@@ -1,7 +1,9 @@
+"""Module for PullRequest."""
+
 from github import Github, GithubException
 
 
-class PullRequest():
+class PullRequest:
     """PullRequest"""
 
     def __init__(self, repository_name, title, description, base, branch,
@@ -29,7 +31,7 @@ class PullRequest():
         """
         gh_repository = self.get_github_repository(github_token)
         if gh_repository is None:
-            return
+            return None
 
         try:
             gh_pull_request = gh_repository.create_pull(
@@ -39,18 +41,18 @@ class PullRequest():
             html_url = gh_pull_request.html_url
             print("Pull request created at {}".format(html_url))
         except GithubException:
-            gh_pull_request = self.update(github_token, gh_repository)
+            gh_pull_request = self.update(gh_repository)
             if gh_pull_request:
                 html_url = gh_pull_request.html_url
                 print("Pull request updated at {}".format(html_url))
         return gh_pull_request
 
-    def update(self, github_token, gh_repository):
+    def update(self, gh_repository):
         """Update Github `PullRequest` - set title and description.
 
         Find pull request by repository and branch.
         """
-        assert(gh_repository is not None)
+        assert gh_repository is not None
 
         gh_pull_requests = gh_repository.get_pulls(
             head="{repo}:{branch}".format(

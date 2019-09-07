@@ -1,10 +1,11 @@
+"""Config loader to read configuration."""
+
 import argparse
 try:
     import configparser
 except ImportError:
     import ConfigParser as configparser
 import os
-import sys
 
 
 CONFIG_FILE_NAME = "lazy_pr.ini"

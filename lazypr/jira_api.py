@@ -1,3 +1,5 @@
+"""Module to access Jira API."""
+
 import json
 import requests
 
@@ -31,7 +33,7 @@ def get_pr_title_from_jira_ticket(branch, jira_email, jira_api_key):
         jira_ticket_key=jira_ticket_key)
     response = requests.get(
         url, auth=requests.auth.HTTPBasicAuth(jira_email, jira_api_key),
-        headers= {"Content-Type" : "application/json"})
+        headers={"Content-Type" : "application/json"})
     if response.ok:
         response_data = json.loads(response.text)
         summary = response_data.get("fields", {}).get("summary", "")
