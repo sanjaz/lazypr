@@ -1,4 +1,4 @@
-"""Config loader to read configuration."""
+"""Load configuration."""
 
 import argparse
 try:
@@ -9,32 +9,56 @@ import os
 
 
 CONFIG_FILE_NAME = "lazy_pr.ini"
+DEFAULT_CONFIG_SECTION = "default"
 ENV_PREFIX = "LAZY_PR_"
+
+
+def get_default_config_file_path():
+    """Return default configuration file path.
+
+    $XDG_CONFIG_HOME defines the base directory relative to which user specific
+    configuration files should be stored. If $XDG_CONFIG_HOME is either not set
+    or empty, ~/.config should be used.
+    """
+    config_home = os.environ.get("XDG_CONFIG_HOME")
+    if not config_home:
+        home = os.path.expanduser("~")
+        config_home = os.path.join(home, ".config")
+    config_file_path = os.path.join(config_home, CONFIG_FILE_NAME)
+    return config_file_path
 
 
 def get_command_line_options():
     """Parse and return command line arguments."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config-file', help='config file path')
-    parser.add_argument('-jt', '--jira-api-token', help='Jira API Token')
-    parser.add_argument('-je', '--jira-email', help='Jira Email')
-    parser.add_argument('-gt', '--github-token', help='Github Token')
-    parser.add_argument('-r', '--repo', help='Git Repository')
-    parser.add_argument('-rp', '--repo-path', help='Git Repository Local Path')
-    parser.add_argument('-b', '--branch', help='Git Branch')
-    parser.add_argument('-s', '--pr-base', help='PR Base')
-    parser.add_argument('-t', '--pr-title', help='PR Title')
-    parser.add_argument('-d', '--pr-desc', help='PR Description or Path')
-    parser.add_argument('-tm', '--pr-team', help='PR Team Reviewers.')
+    parser.add_argument('-c', '--config-file-path', help='Config file path')
+    parser.add_argument('-cs', '--config-section', help='Config section')
+    parser.add_argument('-jt', '--jira-api-token', help='Jira API token')
+    parser.add_argument('-je', '--jira-email', help='Jira user email')
+    parser.add_argument('-gt', '--github-token', help='GitHub token')
+    parser.add_argument('-r', '--repo', help='Git repository')
+    parser.add_argument('-rp', '--repo-path', help='Git repository local path')
+    parser.add_argument('-b', '--branch', help='Git branch')
+    parser.add_argument('-s', '--pr-base', help='Pull request base branch')
+    parser.add_argument('-t', '--pr-title', help='Pull request title')
+    parser.add_argument(
+        '-d', '--pr-desc', help='Pull request description template path')
+    parser.add_argument('-tm', '--pr-team', help='Pull request team reviewers')
 
     return parser.parse_args()
 
 
-def get_config_file_options(config_file, section_name="default"):
+def get_config_file_options(config_file_path, section_name):
     """Read config file and return `section_name` values."""
     config = configparser.SafeConfigParser()
-    config.read([config_file])
-    return dict(config.items(section_name))
+    config.read([config_file_path])
+    if not section_name:
+        section_name = DEFAULT_CONFIG_SECTION
+    if section_name in config.sections():
+        config_data = dict(config.items(section_name))
+    else:
+        config_data = {}
+    return config_data
 
 
 def get_env_options(prefix):
@@ -56,12 +80,11 @@ def load_config():
     cli_options = get_command_line_options()
 
     # Read configuration from .ini file.
-    config_file = cli_options.config_file
-    if config_file is None:
-        # Read configuration from ~/.config/lazy_pr.ini.
-        home = os.path.expanduser("~")
-        config_file = os.path.join(home, '.config', CONFIG_FILE_NAME)
-    config_options = get_config_file_options(config_file)
+    config_file_path = cli_options.config_file_path
+    if config_file_path is None:
+        config_file_path = get_default_config_file_path()
+    config_section = cli_options.config_section or DEFAULT_CONFIG_SECTION
+    config_options = get_config_file_options(config_file_path, config_section)
 
     # Override config with environment variables.
     env_options = get_env_options(ENV_PREFIX)
