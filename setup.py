@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name="lazypr",
     version="0.1",
-    description="Creating pull request on github",
+    description="Creating a pull request on GitHub",
     author="Sanja Segan",
     author_email="",
     url="https://github.com/sanjaz/lazypr",
