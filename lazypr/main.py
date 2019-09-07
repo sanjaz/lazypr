@@ -36,10 +36,13 @@ def main():
     config = load_config()
 
     # Get git branch from config or look for the locally used one in repo-path.
+    # If it doesn't exist, ask user to enter the branch via the command line.
     branch = config.get("branch") or get_branch(config.get("repo-path"))
     if branch is None:
-        print("Invalid branch.")
-        sys.exit(1)
+        branch = input("Please insert git branch name:\n").strip()
+        if branch == "":
+            print("Invalid branch.")
+            sys.exit(1)
 
     # Get pull request title from config or create one from the Jira ticket.
     title = config.get("pr-title")
