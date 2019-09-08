@@ -58,7 +58,7 @@ lazypr -r "sanjaz/lazypr" -b "lp_1" `
 In case repository command line arg is omitted, repository will be fetched from
 `repo` value in config file.
 ```python
-python lazypr -b "lp_1"
+lazypr -b "lp_1"
 ```
 In case branch is not specified, it looks for current branch in local
 repository (local repository path is set in `repo-path` in .ini config file):
@@ -104,5 +104,7 @@ If omitted, default is specified in .ini config file.
 https://id.atlassian.com/manage/api-tokens and click "Create API token".
 For more details, check
 https://confluence.atlassian.com/cloud/api-tokens-938839638.html
+- How to find your user Jira email:
+https://id.atlassian.com/manage-profile/email
 - How to find/generate github token: https://github.com/settings/tokens.
 Some details can be found here: https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
