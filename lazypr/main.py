@@ -51,6 +51,9 @@ def main():
     gihub_api = GitHubApi(
         github_token=config.get("github-token"), logger=logger)
     repository = gihub_api.get_repository(repository_name=config.get("repo"))
+    if repository is None:
+        logger.error("No repository found.")
+        sys.exit(1)
     gihub_api.create_pull_request(
         repository=repository,
         title=title,
