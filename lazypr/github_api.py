@@ -19,7 +19,8 @@ class GitHubApi:
         """Fetch and return Github `Repository`."""
         try:
             repository = Github(self.github_token).get_repo(repository_name)
-        except GithubException:
+        except GithubException as ex:
+            self.logger.error(ex)
             repository = None
         return repository
 
