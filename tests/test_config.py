@@ -1,8 +1,8 @@
+"""Loading Configuration tests."""
+
 import os
 
-import pytest
-
-from lazypr.config import CONFIG_FILE_NAME, get_default_config_file_path
+from lazypr.config import get_default_config_file_path
 
 
 class TestConfig:
