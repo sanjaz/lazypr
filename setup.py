@@ -4,7 +4,7 @@ readme = open('README.md').read()
 
 setup(
     name="lazypr",
-    version="0.1.1",
+    version="0.1.2",
     description="Creating a pull request on GitHub",
     long_description=readme,
     author="Sanja Segan",
