@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="lazypr",
     version="0.1.2",
-    description="Creating a pull request on GitHub",
+    description="Tool for creating and updating pull requests on GitHub.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Sanja Segan",
