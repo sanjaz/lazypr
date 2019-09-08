@@ -1,12 +1,14 @@
 from setuptools import find_packages, setup
 
-readme = open('README.md').read()
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name="lazypr",
     version="0.1.2",
     description="Creating a pull request on GitHub",
-    long_description=readme,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Sanja Segan",
     author_email="sanjazivotic@gmail.com",
     url="https://github.com/sanjaz/lazypr",
