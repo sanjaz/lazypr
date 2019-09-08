@@ -98,3 +98,11 @@ If omitted, default is specified in .ini config file (usually master).
 lazypr -tm "my-team"
 ```
 If omitted, default is specified in .ini config file.
+
+### Notes
+- How to find/generate Jira API token: log in to
+https://id.atlassian.com/manage/api-tokens and click "Create API token".
+For more details, check
+https://confluence.atlassian.com/cloud/api-tokens-938839638.html
+- How to find/generate github token: https://github.com/settings/tokens.
+Some details can be found here: https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line

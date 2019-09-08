@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 
+
 def read_file(path):
     """Read file contents and return it as a string."""
     if path and os.path.exists(path):
