@@ -28,7 +28,7 @@ class GitHubApi:
                             team_reviewers):
         """Create Github `PullRequest` and set team reviewers.
 
-        In case pull request already exists, update title and description.
+        In case pull request already exists, update its title and description.
         """
         assert isinstance(repository, Repository.Repository)
 
