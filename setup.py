@@ -17,6 +17,6 @@ setup(
     test_suite="tests",
     install_requires=["PyGithub", "pygit2"],
     extras_require=None,
-    tests_require=["mock", "pytest<5.0"],
+    tests_require=["mock", "pytest<6.0"],
     entry_points={"console_scripts": ["lazypr = lazypr.main:main"]},
 )
